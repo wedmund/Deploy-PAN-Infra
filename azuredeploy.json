@@ -241,7 +241,6 @@
         "imageOffer": "vmseries-flex",
         "nsgName": "DefaultNSG",
         "nicName": "[concat(parameters('vmName'), '-', parameters('publicIPAddressName'), '-eth')]",
-
         "existingVnetID": "[resourceId(parameters('virtualNetworkExistingRGName'),concat('Microsoft.Network','/','virtualNetworks'),parameters('virtualNetworkName'))]",
         "existingSubnet0Ref": "[concat(variables('existingVnetID'),'/subnets/',parameters('subnet0Name'))]",
         "existingSubnet1Ref": "[concat(variables('existingVnetID'),'/subnets/',parameters('subnet1Name'))]",

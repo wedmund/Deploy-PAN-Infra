@@ -27,7 +27,7 @@
             "value": "password"
         },
         "adminPasswordOrKey": {
-            "value": null
+            "value": "ChangePassword"
         },
         "vmSize": {
             "value": "Standard_D3_v2"
