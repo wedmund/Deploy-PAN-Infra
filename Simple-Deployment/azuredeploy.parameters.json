@@ -72,10 +72,6 @@
         },
         "publicIPAllocationMethod": {
             "value": "Dynamic"
-        },
-        "StorageAccountName": {
-            "value": ""
         }
-        
     }
 }

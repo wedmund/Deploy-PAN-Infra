@@ -9,12 +9,6 @@
                 "description": "Location for all resources."
             }
         },
-        "StorageAccountName": {
-            "type": "string",
-            "metadata": {
-               "description": "This is the name of the your storage account. Enter up to 20 characters"
-            }
-        },
         "srcIPInboundNSG": {
             "type": "string",
             "metadata": {
@@ -195,14 +189,12 @@
     },
     "functions": [],
     "variables": {
-        "unqString" : "[substring(uniqueString(resourceGroup().id), 0, 4)]",
-        "strAccountName": "[concat(parameters('StorageAccountName'),variables('unqString'))]",
-        "storageAccountType": "Standard_LRS",
         "imagePublisher": "paloaltonetworks",
         "imageSku": "byol",
         "imageOffer": "vmseries-flex",
         "availabilitySetName": "[concat(parameters('vmName'),'-AS')]",
         "nsgName": "DefaultNSG",
+        "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefixes')[0]]",
         "nicName": "[concat(parameters('vmName'), '-', parameters('publicIPAddressName'), '-eth')]",
         "existingVnetID": "[resourceId(parameters('virtualNetworkExistingRGName'),concat('Microsoft.Network','/','virtualNetworks'),parameters('virtualNetworkName'))]",
         "existingSubnet0Ref": "[concat(variables('existingVnetID'),'/subnets/',parameters('subnet0Name'))]",
@@ -216,7 +208,6 @@
         "subnet0Ref": "[if(equals(parameters('vnetNewOrExisting'),'new'), variables('newSubnet0Ref'), variables('existingSubnet0Ref'))]",
         "subnet1Ref": "[if(equals(parameters('vnetNewOrExisting'),'new'), variables('newSubnet1Ref'), variables('existingSubnet1Ref'))]",
         "subnet2Ref": "[if(equals(parameters('vnetNewOrExisting'),'new'), variables('newSubnet2Ref'), variables('existingSubnet2Ref'))]",
-        "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefixes')[0]]",
         "subnets": [
             {
                 "name": "[parameters('subnet0Name')]",
@@ -245,7 +236,7 @@
         {
             "type": "Microsoft.Compute/availabilitySets",
             "name": "[variables('availabilitySetName')]",
-            "apiVersion": "2017-03-30",
+            "apiVersion": "2019-07-01",
             "location": "[parameters('location')]",
             "properties": {
                 "platformUpdateDomainCount": 20,
@@ -253,20 +244,6 @@
             },
             "sku": {
                 "name": "Aligned"
-            }
-        },
-        {
-            "name": "[variables('strAccountName')]",
-            "type": "Microsoft.Storage/storageAccounts",
-            "location": "[parameters('location')]",
-            "apiVersion": "2019-06-01",
-            "kind": "BlobStorage",
-            "sku": {
-                "name": "Standard_LRS",
-                "tier": "Standard"
-            },
-            "properties": {
-                "accountType": "[variables('storageAccountType')]"
             }
         },
         {
@@ -310,7 +287,7 @@
                             "protocol": "*",
                             "sourcePortRange": "*",
                             "destinationPortRange": "*",
-                            "sourceAddressPrefix": "[parameters('virtualNetworkAddressPrefixes')]",
+                            "sourceAddressPrefix": "[variables('virtualNetworkAddressPrefix')]",
                             "destinationAddressPrefix": "*",
                             "access": "Allow",
                             "priority": 101,
@@ -346,7 +323,7 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[parameters('virtualNetworkAddressPrefixes')]"
+                        "[variables('virtualNetworkAddressPrefix')]"
                     ]
                 },
                 "subnets": "[variables('subnets')]"
@@ -467,7 +444,10 @@
                         "version": "[parameters('imageVersion')]"
                     },
                     "osDisk": {
-                        "createOption": "FromImage"
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        }
                     }
                 },
                 "networkProfile": {
