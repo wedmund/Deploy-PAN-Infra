@@ -55,9 +55,6 @@
         "subnet2StartAddress": {
             "value": "10.200.20.4"
         },
-        "authenticationType": {
-            "value": "password"
-        },
         "adminUsername": {
             "value": "pa-admin"
         },
@@ -75,6 +72,9 @@
         },
         "publicIPAllocationMethod": {
             "value": "Dynamic"
+        },
+        "StorageAccountName": {
+            "value": ""
         }
         
     }
