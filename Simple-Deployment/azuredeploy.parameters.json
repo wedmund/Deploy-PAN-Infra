@@ -8,18 +8,6 @@
         "srcIPInboundNSG": {
             "value": "0.0.0.0/0"
         },
-        "newStorageAccount": {
-            "value": "panfwstorage01" 
-        },
-        "storageAccountType": {
-            "value": "Standard_LRS"
-        },
-        "storageAccountNewOrExisting": {
-            "value": "new"
-        },
-        "existingStorageAccountRG": {
-            "value": ""
-        },
         "vmName": {
             "value": "VM-Series"
         },
