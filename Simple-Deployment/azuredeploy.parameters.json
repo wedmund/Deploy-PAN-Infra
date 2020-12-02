@@ -2,5 +2,92 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "location": {
+            "value": "australiaeast"
+        },
+        "srcIPInboundNSG": {
+            "value": "0.0.0.0/0"
+        },
+        "newStorageAccount": {
+            "value": "panfwstorage01" 
+        },
+        "storageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "storageAccountNewOrExisting": {
+            "value": "new"
+        },
+        "existingStorageAccountRG": {
+            "value": ""
+        },
+        "vmName": {
+            "value": "VM-Series"
+        },
+        "imageVersion": {
+            "value": "9.1.2"
+        },
+        "vmSize": {
+            "value": "Standard_D3_v2"
+        },
+        "virtualNetworkName": {
+            "value": "TransitVNET"
+        },
+        "vnetNewOrExisting": {
+            "value": "new"
+        },
+        "virtualNetworkAddressPrefixes": {
+            "value": [
+                "10.200.0.0/16"
+            ]
+        },
+        "virtualNetworkExistingRGName": {
+            "value": ""
+        },
+        "subnet0Name": {
+            "value": "Mgmt"
+        },
+        "subnet1Name": {
+            "value": "Outside"
+        },
+        "subnet2Name": {
+            "value": "Inside"
+        },
+        "subnet0Prefix": {
+            "value": "10.200.1.0/24"
+        },
+        "subnet1Prefix": {
+            "value": "10.200.10.0/24"
+        },
+        "subnet2Prefix": {
+            "value": "10.200.20.0/24"
+        },
+        "subnet1StartAddress": {
+            "value": "10.200.10.4"
+        },
+        "subnet2StartAddress": {
+            "value": "10.200.20.4"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "adminUsername": {
+            "value": "pa-admin"
+        },
+        "adminPasswordOrKey": {
+            "value": "<ChangePassword>" 
+        },
+        "publicIPNewOrExisting": {
+            "value": "new"
+        },
+        "publicIPAddressName": {
+            "value": "panfwpub" 
+        },
+        "publicIPRGName": {
+            "value": "None"
+        },
+        "publicIPAllocationMethod": {
+            "value": "Dynamic"
+        }
+        
     }
 }
