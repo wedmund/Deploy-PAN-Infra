@@ -238,7 +238,7 @@
             "apiVersion": "2019-07-01",
             "location": "[parameters('location')]",
             "properties": {
-                "platformUpdateDomainCount": 20,
+                "platformUpdateDomainCount": 5,
                 "platformFaultDomainCount": 2
             },
             "sku": {
