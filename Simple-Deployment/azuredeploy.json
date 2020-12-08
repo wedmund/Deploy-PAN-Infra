@@ -185,6 +185,13 @@
             "metadata": {
                 "description": "Allocation method of public IP resource"
             }
+        },
+        "AvailSetName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Availability Set Name for Virtual Machine"
+            }
         }
     },
     "functions": [],
@@ -192,7 +199,7 @@
         "imagePublisher": "paloaltonetworks",
         "imageSku": "byol",
         "imageOffer": "vmseries-flex",
-        "availabilitySetName": "[concat(parameters('vmName'),'-AS')]",
+        "availabilitySetName": "[parameters('AvailSetName')]",
         "nsgName": "DefaultNSG",
         "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefixes')[0]]",
         "nicName": "[concat(parameters('vmName'), '-', parameters('publicIPAddressName'), '-eth')]",
