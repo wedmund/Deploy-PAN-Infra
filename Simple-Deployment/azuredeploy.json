@@ -37,11 +37,6 @@
         "vmSize": {
             "type": "string",
             "allowedValues": [
-                "Standard_D3_v2",
-                "Standard_D4_v2",
-                "Standard_D5_v2",
-                "Standard_D4_v3",
-                "Standard_D16_v3",
                 "Standard_DS3_v2",
                 "Standard_DS4_v2",
                 "Standard_DS5_v2"
@@ -49,7 +44,7 @@
             "metadata": {
                 "description": "Azure VM size for VM-Series"
             },
-            "defaultValue": "Standard_D3_v2"
+            "defaultValue": "Standard_DS3_v2"
         },
         "virtualNetworkName": {
             "type": "string",
@@ -71,7 +66,7 @@
         },
         "virtualNetworkAddressPrefixes": {
             "type": "array",
-            "defaultValue": "[array('192.168.0.0/16')]",
+            "defaultValue": "[array('10.150.0.0/24')]",
             "metadata": {
                 "description": "Virtual network address CIDR"
             }
@@ -92,51 +87,72 @@
         },
         "subnet1Name": {
             "type": "string",
-            "defaultValue": "Untrust",
+            "defaultValue": "Public",
             "metadata": {
-                "description": "Subnet for Untrust"
+                "description": "Subnet for Public"
             }
         },
         "subnet2Name": {
             "type": "string",
-            "defaultValue": "Trust",
+            "defaultValue": "AzureSubscription",
             "metadata": {
-                "description": "Subnet for Trust"
+                "description": "Subnet for internal traffic between subnets and subscriptions"
+            }
+        },
+        "subnet3Name": {
+            "type": "string",
+            "defaultValue": "CPADC",
+            "metadata": {
+                "description": "Subnet for internal traffic between azure and on-premise."
             }
         },
         "subnet0Prefix": {
             "type": "string",
-            "defaultValue": "192.168.0.0/24",
+            "defaultValue": "10.150.0.0/27",
             "metadata": {
                 "description": "Mgmt subnet CIDR"
             }
         },
         "subnet1Prefix": {
             "type": "string",
-            "defaultValue": "192.168.1.0/24",
+            "defaultValue": "10.150.0.160/27",
             "metadata": {
-                "description": "Untrust subnet CIDR"
+                "description": "Public subnet CIDR"
             }
         },
         "subnet2Prefix": {
             "type": "string",
-            "defaultValue": "192.168.2.0/24",
+            "defaultValue": "10.150.0.32/27",
             "metadata": {
-                "description": "Trust subnet CIDR"
+                "description": "Azure Subscription subnet CIDR"
+            }
+        },
+        "subnet3Prefix": {
+            "type": "string",
+            "defaultValue": "10.150.0.64/27",
+            "metadata": {
+                "description": "CPA DC subnet for internal traffic between azure and on-premise"
             }
         },
         "subnet1StartAddress": {
             "type": "string",
-            "defaultValue": "192.168.1.4",
+            "defaultValue": "10.150.0.161",
             "metadata": {
-                "description": "Untrust subnet start address"
+                "description": "Public subnet start address"
             }
         },
         "subnet2StartAddress": {
             "type": "string",
-            "defaultValue": "192.168.2.4",
+            "defaultValue": "10.150.0.33",
             "metadata": {
-                "description": "Trust subnet start address"
+                "description": "Azure Subscription subnet start address"
+            }
+        },
+        "subnet3StartAddress": {
+            "type": "string",
+            "defaultValue": "10.150.0.65",
+            "metadata": {
+                "description": "CPA DC Subnet start address"
             }
         },
         "adminUsername": {
@@ -177,7 +193,7 @@
         },
         "publicIPAllocationMethod": {
             "type": "string",
-            "defaultValue": "Dynamic",
+            "defaultValue": "Static",
             "allowedValues": [
                 "Dynamic",
                 "Static"
@@ -200,20 +216,23 @@
         "imageSku": "byol",
         "imageOffer": "vmseries-flex",
         "availabilitySetName": "[parameters('AvailSetName')]",
-        "nsgName": "DefaultNSG",
+        "nsgName": "MgmtNSG",
         "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefixes')[0]]",
         "nicName": "[concat(parameters('vmName'), '-', parameters('publicIPAddressName'), '-eth')]",
         "existingVnetID": "[resourceId(parameters('virtualNetworkExistingRGName'),concat('Microsoft.Network','/','virtualNetworks'),parameters('virtualNetworkName'))]",
         "existingSubnet0Ref": "[concat(variables('existingVnetID'),'/subnets/',parameters('subnet0Name'))]",
         "existingSubnet1Ref": "[concat(variables('existingVnetID'),'/subnets/',parameters('subnet1Name'))]",
         "existingSubnet2Ref": "[concat(variables('existingVnetID'),'/subnets/',parameters('subnet2Name'))]",
+        "existingSubnet3Ref": "[concat(variables('existingVnetID'),'/subnets/',parameters('subnet3Name'))]",
         "newVnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
         "newSubnet0Ref": "[concat(variables('newVnetID'),'/subnets/',parameters('subnet0Name'))]",
         "newSubnet1Ref": "[concat(variables('newVnetID'),'/subnets/',parameters('subnet1Name'))]",
         "newSubnet2Ref": "[concat(variables('newVnetID'),'/subnets/',parameters('subnet2Name'))]",
+        "newSubnet3Ref": "[concat(variables('newVnetID'),'/subnets/',parameters('subnet3Name'))]",
         "subnet0Ref": "[if(equals(parameters('vnetNewOrExisting'),'new'), variables('newSubnet0Ref'), variables('existingSubnet0Ref'))]",
         "subnet1Ref": "[if(equals(parameters('vnetNewOrExisting'),'new'), variables('newSubnet1Ref'), variables('existingSubnet1Ref'))]",
         "subnet2Ref": "[if(equals(parameters('vnetNewOrExisting'),'new'), variables('newSubnet2Ref'), variables('existingSubnet2Ref'))]",
+        "subnet3Ref": "[if(equals(parameters('vnetNewOrExisting'),'new'), variables('newSubnet3Ref'), variables('existingSubnet3Ref'))]",
         "subnets": [
             {
                 "name": "[parameters('subnet0Name')]",
@@ -234,6 +253,12 @@
                 "name": "[parameters('subnet2Name')]",
                 "properties": {
                     "addressPrefix": "[parameters('subnet2Prefix')]"
+                }
+            },
+            {
+                "name": "[parameters('subnet3Name')]",
+                "properties": {
+                    "addressPrefix": "[parameters('subnet3Prefix')]"
                 }
             }
         ]
@@ -258,6 +283,9 @@
             "apiVersion": "2017-10-01",
             "condition": "[equals(parameters('publicIPNewOrExisting'), 'new')]",
             "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard"
+            },
             "properties": {
                 "publicIPAllocationMethod": "[parameters('publicIPAllocationMethod')]",
                 "dnsSettings": {
@@ -414,6 +442,32 @@
             }
         },
         {
+            "name": "[concat(variables('nicName'), '3')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2017-10-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+            ],
+            "location": "[parameters('location')]",
+            "properties": {
+                "enableIPForwarding": true,
+                "enableAcceleratedNetworking": "[if(equals(parameters('imageVersion'), '8.1.9'), 'false', 'true')]",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig-cpadc",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[parameters('subnet3StartAddress')]",
+                            "subnet": {
+                                "id": "[variables('subnet3Ref')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
             "name": "[parameters('vmName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-07-01",
@@ -424,6 +478,7 @@
                 "[concat(variables('nicName'), '0')]",
                 "[concat(variables('nicName'), '1')]",
                 "[concat(variables('nicName'), '2')]",
+                "[concat(variables('nicName'), '3')]",
                 "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
             ],
             "location": "[parameters('location')]",
@@ -474,6 +529,12 @@
                         },
                         {
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'),'2'))]",
+                            "properties": {
+                                "primary": false
+                            }
+                        },
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'),'3'))]",
                             "properties": {
                                 "primary": false
                             }
